@@ -13,7 +13,7 @@
 namespace logstat {
 
 log_parsers::Log FetchDateByOffset(std::ifstream &infile, const std::streampos offset, 
-                                   log_parsers::LogParser &parser) noexcept {
+                                   const log_parsers::LogParser &parser) noexcept {
     infile.seekg(offset);
     std::string fin_date;
     log_parsers::Log log; 
@@ -25,8 +25,8 @@ log_parsers::Log FetchDateByOffset(std::ifstream &infile, const std::streampos o
 }
 
 std::streampos FindLogPos(std::ifstream &infile, const time_t target, 
-                          size_t file_size,
-                          log_parsers::LogParser &parser) noexcept {
+                          const size_t file_size,
+                          const log_parsers::LogParser &parser) noexcept {
     long right = file_size;
     long left = 0;
     while (left <= right) {
@@ -47,7 +47,8 @@ std::streampos FindLogPos(std::ifstream &infile, const time_t target,
  *  This might cause multiple log messages to be logged per one second and lead to duplicate timestamps.
  *  Therefore after we found a target timestamp chances are there are duplicates which we also need */
 std::streampos AdjustLogPos(std::ifstream &infile, const time_t start, 
-                            std::streampos offset, log_parsers::LogParser &parser) noexcept {
+                            std::streampos offset, 
+                            const log_parsers::LogParser &parser) noexcept {
     // window size determines how many bytes to jump back in the file. 
     // Bigger values provide better performance but for the higher risk of possible range mistakes
     constexpr int adj_window_sz = 100;              
@@ -56,7 +57,7 @@ std::streampos AdjustLogPos(std::ifstream &infile, const time_t start,
 }
 
 void ProcessLogs(const cmd::CmdOptions &options,
-                      log_parsers::LogParser &parser) noexcept {
+                 const log_parsers::LogParser &parser) noexcept {
     const std::string filepath = options.filepath;
     std::ifstream infile(filepath, std::ios::in);
     if (!infile) {

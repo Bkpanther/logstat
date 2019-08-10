@@ -12,17 +12,17 @@ class Log;
 
 namespace logstat {
 
-log_parsers::Log FetchDateByOffset(std::ifstream &infile, const std::streampos offset, 
-                                   log_parsers::LogParser &parser) noexcept;
+log_parsers::Log FetchDateByOffset(const std::ifstream &infile, const std::streampos offset, 
+                                   const log_parsers::LogParser &parser) noexcept;
 
 std::streampos FindLogPos(std::ifstream &infile, const time_t target, 
-                          size_t file_size,
-                          log_parsers::LogParser &parser) noexcept;
+                          const size_t file_size,
+                          const log_parsers::LogParser &parser) noexcept;
 
-std::streampos AdjustLogPos(std::ifstream &infile, const time_t start, 
-                            std::streampos offset, log_parsers::LogParser &parser) noexcept;
+std::streampos AdjustLogPos(const std::ifstream &infile, const time_t start, 
+                            std::streampos offset, const log_parsers::LogParser &parser) noexcept;
 
 void ProcessLogs(const cmd::CmdOptions &options,
-                      log_parsers::LogParser &parser) noexcept;
+                 const log_parsers::LogParser &parser) noexcept;
 
 }

@@ -11,6 +11,6 @@ static char const * kCouchdbNonReqMarker = "--------";
 
 struct CouchDBLogParser: public LogParser {
     public: 
-        Log ParseLog(const std::vector<std::string> &tokens) override;
+        Log ParseLog(const std::vector<std::string> &tokens) const override;
 };
 }

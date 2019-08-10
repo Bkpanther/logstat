@@ -6,7 +6,7 @@
 
 namespace log_parsers {
 
-Log CouchDBLogParser::ParseLog(const std::vector<std::string> &tokens) { 
+Log CouchDBLogParser::ParseLog(const std::vector<std::string> &tokens) const { 
     if (tokens.size() > 1) {
         const auto level = log_utils::GetLogLevel(tokens.at(0));
         const std::time_t log_date = log_utils::GetEpoch(tokens.at(1), log_parsers::kCouchdbLogDateFormat);

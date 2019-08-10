@@ -31,7 +31,7 @@ struct Log {
 
 struct LogParser {
     public:
-        virtual std::vector<std::string> TokeniseLog(const std::string &log) {
+        virtual std::vector<std::string> TokeniseLog(const std::string &log) const {
             std::vector<std::string> tokens;
             tokens.reserve(30);
             std::istringstream ss(log);
@@ -41,8 +41,8 @@ struct LogParser {
             }
             return tokens;
         };
-        virtual Log ParseLog(const std::vector<std::string> &tokens) = 0;
-        virtual Log GetLog(const std::string &log) {
+        virtual Log ParseLog(const std::vector<std::string> &tokens) const = 0;
+        virtual Log GetLog(const std::string &log) const {
             return ParseLog(TokeniseLog(log));
         }
 };
