@@ -36,4 +36,4 @@ Options are:
 --i  skip urls which were called less than N times per a given time range
 ```
 
-Tool uses `/var/log/` an absolute path to lookup logs.
+Tool uses `/var/log/` as an absolute path to lookup logs.
