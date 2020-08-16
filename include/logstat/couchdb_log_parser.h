@@ -4,13 +4,13 @@
 
 #include "log_parser.h"
 
-namespace log_parsers {
+namespace logstat {
 
-static char const * kCouchdbLogDateFormat = "%Y-%m-%dT%H:%M:%S";
-static char const * kCouchdbNonReqMarker = "--------";
+static char const *kCouchdbLogDateFormat = "%Y-%m-%dT%H:%M:%S";
+static char const *kCouchdbNonReqMarker = "--------";
 
-struct CouchDBLogParser: public LogParser {
-    public: 
-        Log ParseLog(const std::vector<std::string> &tokens) const override;
+struct CouchDBLogParser : public LogParser {
+ public:
+  Log ParseLog(const std::vector<std::string> &tokens) const override;
 };
-}
+}  // namespace logstat

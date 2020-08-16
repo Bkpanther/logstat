@@ -13,6 +13,12 @@ logstat:
 	$(CC) $(CFLAGS) $(HEADERS) -o $(EXEC) $(SOURCES)
 
 .PHONY: clean
+	
+.PHONY: format
 
 clean:
 	rm -f $(EXEC)
+
+format:
+	clang-format -style=file -i src/*.cc
+	clang-format -style=file -i include/logstat/*.h
