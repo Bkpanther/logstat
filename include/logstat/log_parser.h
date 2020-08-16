@@ -53,7 +53,7 @@ struct Log {
 
 constexpr int max_tokens = 30;
 
-struct LogParser {
+class LogParser {
  public:
   virtual std::vector<std::string> TokeniseLog(const std::string &log) const {
     std::vector<std::string> tokens;

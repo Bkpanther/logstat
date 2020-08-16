@@ -8,7 +8,7 @@
 
 #include "cmd_parser.h"
 
-class Log;
+struct Log;
 class LogParser;
 
 namespace logstat {
