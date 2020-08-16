@@ -12,7 +12,7 @@ Compatible with C++14 and verified on Clang 10.x and GCC `g++` 6.x compilers und
 
 ## Extensibility
 
-This tool is easily extendable so that to support any unstructured or structured log formats. Presently only CouchDB log format is supported. In order to add support for another log format you should inherit your custom parser class (`NginxLogParser`, `HAProxyLogParser`, et cetera) from a `LogParser` and override `ParseLog()` member function with your own implementation to associate log tokens because their order is different for sundry systems. After this merely initialise this new parser class and pass it to a `logstat::ProcessLogs()` function within `main`.
+This tool is easily extendable so that to support any unstructured or structured log formats. Presently only CouchDB log format is supported. In order to add support for another log format you should inherit your custom parser class (`NginxLogParser`, `HAProxyLogParser`, et cetera) from a `LogParser` and override `ParseLog()` member function with your own implementation which shall initialise a `Log` POD type from a raw vector of log tokens. `Log` data class contains fields to represent the most commonly logged entries. However in case something is missing for your particular system you might want to extend this POD type. After this merely initialise a new parser class and pass its instance to a `logstat::ProcessLogs()` function within `main`.
 
 
 ## Usage

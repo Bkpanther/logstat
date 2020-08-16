@@ -57,42 +57,37 @@ inline std::time_t ExtractToken<std::time_t>(
 };
 
 Log CouchDBLogParser::ParseLog(const std::vector<std::string> &tokens) const {
-  Log couchdb_log;
   const auto level = ExtractToken<log_utils::LogSeverityLevel>(
       LEVEL_TOK, tokens, log_utils::LogSeverityLevel::LOG_UNDEF);
   const auto log_date = ExtractToken<std::time_t>(DATE_TOK, tokens, -1);
-
+  Log couchdb_log = {};
   if (level != log_utils::LogSeverityLevel::LOG_UNDEF && log_date != -1) {
-    const std::string host = ExtractToken<std::string>(HOST_TOK, tokens, "");
-    const std::string pid = ExtractToken<std::string>(PID_TOK, tokens, "");
-    const auto method = ExtractToken<log_utils::HTTPMethod>(
+    couchdb_log = {.log_level = level,
+                   .date = log_date,
+                   .host = ExtractToken<std::string>(HOST_TOK, tokens, ""),
+                   .pid = ExtractToken<std::string>(PID_TOK, tokens, "")};
+    const auto http_method = ExtractToken<log_utils::HTTPMethod>(
         METHOD_TOK, tokens, log_utils::HTTPMethod::UNDEF_ERROR);
     const std::string msg_id =
         ExtractToken<std::string>(MSG_ID_TOK, tokens, kCouchdbNonReqMarker);
 
     if (msg_id.compare(kCouchdbNonReqMarker) == 0) {
-      couchdb_log = {level, log_date, host, pid};
       couchdb_log.is_generic_msg = true;
-    } else if (method != log_utils::HTTPMethod::UNDEF_ERROR) {
-      const std::string domain_name =
+    } else if (http_method != log_utils::HTTPMethod::UNDEF_ERROR) {
+      couchdb_log.domain_name =
           ExtractToken<std::string>(DOMAIN_TOK, tokens, "");
-      const std::string ip_address =
-          ExtractToken<std::string>(IP_TOK, tokens, "");
-      const std::string user = ExtractToken<std::string>(USER_TOK, tokens, "");
-      const std::string request_url =
-          ExtractToken<std::string>(URL_TOK, tokens, "");
-      const std::string http_code =
+      couchdb_log.ip_address = ExtractToken<std::string>(IP_TOK, tokens, "");
+      couchdb_log.user = ExtractToken<std::string>(USER_TOK, tokens, "");
+      couchdb_log.http_code =
           ExtractToken<std::string>(HTTP_CODE_TOK, tokens, "");
-      const int req_time =
+      couchdb_log.req_time =
           std::stoi(ExtractToken<std::string>(TIME_TOK, tokens, "0"), nullptr);
-      couchdb_log = {level,  log_date,    host,       pid,
-                     msg_id, domain_name, ip_address, user,
-                     method, request_url, http_code,  req_time};
-      couchdb_log.short_req_url = request_url.substr(0, request_url.find('?'));
+      const auto req_url = ExtractToken<std::string>(URL_TOK, tokens, "");
+      couchdb_log.request_url = req_url;
+      couchdb_log.short_req_url = req_url.substr(0, req_url.find('?'));
       couchdb_log.http_method_str =
           ExtractToken<std::string>(METHOD_TOK, tokens, "");
     } else {
-      couchdb_log = {level, log_date, host, pid};
       couchdb_log.is_stacktrace = true;
     }
   }
