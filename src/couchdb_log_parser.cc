@@ -32,7 +32,7 @@ inline TokType ExtractToken(const LogToken index,
 // Special treatment for "strongly-typed" tokens such as HTTP methods, log
 // severity levels, et cetera
 template <>
-log_utils::LogSeverityLevel ExtractToken<log_utils::LogSeverityLevel>(
+inline log_utils::LogSeverityLevel ExtractToken<log_utils::LogSeverityLevel>(
     const LogToken index, const std::vector<std::string> &tokens,
     log_utils::LogSeverityLevel def_value) {
   return tokens.size() > index ? log_utils::GetLogLevel(tokens[index])
@@ -40,7 +40,7 @@ log_utils::LogSeverityLevel ExtractToken<log_utils::LogSeverityLevel>(
 };
 
 template <>
-log_utils::HTTPMethod ExtractToken<log_utils::HTTPMethod>(
+inline log_utils::HTTPMethod ExtractToken<log_utils::HTTPMethod>(
     const LogToken index, const std::vector<std::string> &tokens,
     log_utils::HTTPMethod def_value) {
   return tokens.size() > index ? log_utils::GetHTTPMethod(tokens[index])
@@ -48,9 +48,9 @@ log_utils::HTTPMethod ExtractToken<log_utils::HTTPMethod>(
 };
 
 template <>
-std::time_t ExtractToken<std::time_t>(const LogToken index,
-                                      const std::vector<std::string> &tokens,
-                                      std::time_t def_value) {
+inline std::time_t ExtractToken<std::time_t>(
+    const LogToken index, const std::vector<std::string> &tokens,
+    std::time_t def_value) {
   return tokens.size() > index
              ? log_utils::GetEpoch(tokens[index], kCouchdbLogDateFormat)
              : def_value;
