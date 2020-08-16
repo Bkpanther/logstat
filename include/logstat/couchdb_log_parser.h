@@ -7,7 +7,7 @@
 namespace logstat {
 
 static char const *kCouchdbLogDateFormat = "%Y-%m-%dT%H:%M:%S";
-static char const *kCouchdbNonReqMarker = "--------";
+static const std::string kCouchdbNonReqMarker = "--------";
 
 struct CouchDBLogParser : public LogParser {
  public:
