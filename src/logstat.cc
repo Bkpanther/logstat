@@ -1,19 +1,11 @@
-// Copyright (c) 2019 Oleksandr Karaberov. All rights reserved.
-// Use of this source code is governed by a MIT-style license that can be
-// found in the LICENSE file. See the AUTHORS file for names of contributors.
-
 #include "logstat.h"
-
 #include "couchdb_log_parser.h"
 
 namespace logstat {
 
-typedef std::function<bool(std::pair<std::string, int>,
-                           std::pair<std::string, int>)>
-    Comparator;
+typedef std::function<bool(std::pair<std::string, int>,std::pair<std::string, int>)> Comparator;
 
-Log FetchDateByOffset(std::ifstream &infile, const std::streampos offset,
-                      const LogParser &parser) noexcept {
+Log FetchDateByOffset(std::ifstream &infile, const std::streampos offset, const LogParser &parser) noexcept {
   infile.seekg(offset);
   std::string fin_date;
   Log log;
@@ -26,11 +18,10 @@ Log FetchDateByOffset(std::ifstream &infile, const std::streampos offset,
   return log;
 }
 
-std::streampos FindLogPos(std::ifstream &infile, const time_t target,
-                          const size_t file_size,
-                          const LogParser &parser) noexcept {
+std::streampos FindLogPos(std::ifstream &infile, const time_t target, const size_t file_size, const LogParser &parser) noexcept {
   long right = file_size;
   long left = 0;
+  //using binary search to find the log positon in log file
   while (left <= right) {
     long middle = static_cast<long>(std::floor((left + right) / 2));
     time_t current = FetchDateByOffset(infile, middle, parser).date;
@@ -44,20 +35,17 @@ std::streampos FindLogPos(std::ifstream &infile, const time_t target,
   return 0;
 }
 
-std::streampos AdjustLogPos(std::ifstream &infile, const time_t start,
-                            std::streampos offset,
-                            const LogParser &parser) noexcept {
+std::streampos AdjustLogPos(std::ifstream &infile, const time_t start,std::streampos offset, const LogParser &parser) noexcept {
   constexpr int adj_window_sz = 100;
-  while (std::difftime(start, FetchDateByOffset(infile, offset, parser).date) ==
-         0) {
+  while (std::difftime(start, FetchDateByOffset(infile, offset, parser).date) == 0)
+  {
     offset -= adj_window_sz;
   }
   return offset;
 }
 
-std::unordered_map<std::string, unsigned long> StreamLogs(
-    std::ifstream &infile, const LogParser &parser, const time_t start,
-    const CmdOptions options) {
+std::unordered_map<std::string, unsigned long> StreamLogs(std::ifstream &infile, const LogParser &parser, const time_t start, const CmdOptions options) 
+{
   std::unordered_map<std::string, unsigned long> grouped_logs;
   const auto end = log_utils::GetEpoch(options.end, kCouchdbLogDateFormat);
   if (options.group) {
@@ -110,17 +98,14 @@ std::unordered_map<std::string, unsigned long> StreamLogs(
   return grouped_logs;
 }
 
-void GroupLogs(
-    const CmdOptions options,
-    const std::unordered_map<std::string, unsigned long> grouped_logs) {
+void GroupLogs(const CmdOptions options,const std::unordered_map<std::string, unsigned long> grouped_logs) {
   const auto header = "\n_________\nLogs count (total unique: ";
   std::cout << header << grouped_logs.size() << ")\n";
-  const Comparator comparator = [](const std::pair<std::string, int> &fst,
-                                   const std::pair<std::string, int> &snd) {
+  const Comparator comparator = [](const std::pair<std::string, int> &fst, const std::pair<std::string, int> &snd)
+  {
     return fst.second > snd.second;
   };
-  std::vector<std::pair<std::string, int>> log_entries(grouped_logs.begin(),
-                                                       grouped_logs.end());
+  std::vector<std::pair<std::string, int>> log_entries(grouped_logs.begin(),grouped_logs.end());
   std::sort(log_entries.begin(), log_entries.end(), comparator);
   for (const auto &element : log_entries) {
     if (options.limit == 0) {
